@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Memory Game</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sex_m">M</string>
+    <string name="sex_f">F</string>
+    <string name="birthday">Birthday</string>
+    <string name="sex">Sex</string>
+    <string name="valid">Valid</string>
+    <string name="cancel">Cancel</string>
 </resources>
