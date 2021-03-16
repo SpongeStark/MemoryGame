@@ -10,4 +10,6 @@
     <string name="sex">Sex</string>
     <string name="valid">Valid</string>
     <string name="cancel">Cancel</string>
+    <string name="email_address">Email Address</string>
+    <string name="verify_password">Verify Password</string>
 </resources>
