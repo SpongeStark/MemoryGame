@@ -46,10 +46,3 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         return false;
     }
 }
-
-// test
-class TestOpenHelper{
-    public static void main(String[] args) {
-//        MySQLiteOpenHelper dbHelper = new MySQLiteOpenHelper(, "");
-    }
-}

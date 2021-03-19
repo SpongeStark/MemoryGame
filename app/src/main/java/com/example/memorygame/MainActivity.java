@@ -19,4 +19,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         
     }
+
+    public void btn_valid_onClick(View view){
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
 }
