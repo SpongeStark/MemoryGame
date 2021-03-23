@@ -8,9 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.Date;
+
 public class SQLiteHelper extends SQLiteOpenHelper {
     public static String DB_NAME="GamerDB", TABLE_NAME="Gamer", ID="id";
-    public static String NAME="name", LOGIN="login", PASSWORD="password", SCORE="score";
+    public static String NAME="name", LOGIN="email", PASSWORD="password";
+    public static String BIRTHDAY="birthday", SEX="sex", SCORE="score";
 
     public SQLiteHelper(@Nullable Context context){
         super(context, DB_NAME, null, 1);
@@ -21,7 +24,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " + TABLE_NAME + " (" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 LOGIN + " TEXT," +
-                PASSWORD + " TEXT), " +
+                PASSWORD + " TEXT, " +
+                BIRTHDAY + " DATE, " +
+                SEX + " INTEGER, " +
                 SCORE + "INTEGER);";
         db.execSQL(sql);
     }
@@ -33,13 +38,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    boolean addGamer(String name, String login, String password, int score){
+    boolean addGamer(String name, String email, String password, String birthday, boolean sex, int score){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues data = new ContentValues();
         data.put(NAME, name);
-        data.put(LOGIN, login);
+        data.put(LOGIN, email);
         data.put(PASSWORD, password);
-        data.put(NAME, name);
+        data.put(BIRTHDAY, birthday);
+        data.put(SEX, sex);
         data.put(SCORE, score);
 
         long result = db.insert(TABLE_NAME, null, data);

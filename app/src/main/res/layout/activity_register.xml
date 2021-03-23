@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".RegisterActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -63,7 +64,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextName"
+                    android:id="@+id/register_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
@@ -95,7 +96,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextTextEmailAddress"
+                    android:id="@+id/register_email"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
@@ -128,7 +129,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextPassword"
+                    android:id="@+id/register_password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -161,7 +162,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextPassword2"
+                    android:id="@+id/register_password1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -194,7 +195,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editBirthday"
+                    android:id="@+id/register_birthday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -231,20 +232,20 @@
                     android:layout_marginStart="100dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:checkedButton="@id/radioButtonM"
+                    android:checkedButton="@id/register_sexM"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView8"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <RadioButton
-                        android:id="@+id/radioButtonM"
+                        android:id="@+id/register_sexM"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sex_m" />
 
                     <RadioButton
-                        android:id="@+id/radioButtonF"
+                        android:id="@+id/register_sexF"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sex_f" />
@@ -254,17 +255,18 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/register_valid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/valid"
+        android:onClick="btn_register_click"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/register_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"

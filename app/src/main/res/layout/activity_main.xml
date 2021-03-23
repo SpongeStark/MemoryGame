@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
 
@@ -47,7 +48,7 @@
             tools:layout_editor_absoluteY="100dp" />
 
         <EditText
-            android:id="@+id/editTextTextEmailAddress2"
+            android:id="@+id/main_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -70,7 +71,7 @@
             tools:layout_editor_absoluteY="248dp" />
 
         <EditText
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/main_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -83,7 +84,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_valid"
+        android:id="@+id/main_valid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="btn_valid_onClick"

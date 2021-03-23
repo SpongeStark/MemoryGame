@@ -42,11 +42,12 @@ public class GameActivity extends AppCompatActivity {
         key = new int[]{1,lib[0],lib[1],lib[2],lib[1],lib[3]};
         text.setText("ready");
         new Handler().postDelayed(() -> {
-            //要执行的任务
+            // TO DO
             for (ImageButton button : buttons) {
                 button.setOnClickListener(this::onClick);
             }
             text.setText("start");
+            removeButtonAction();
         }, 1000);
     }
 
@@ -55,8 +56,8 @@ public class GameActivity extends AppCompatActivity {
         if(btnID == key[key[0]]){
             if(key[0] == key.length-1){
                 text.setText("Win");
-                removeAllAction()
-;            }else{
+                removeAllAction();
+            }else{
                 key[0]++;
             }
         }else{
@@ -69,6 +70,14 @@ public class GameActivity extends AppCompatActivity {
         for (ImageButton button : buttons) {
             button.setOnClickListener(null);
         }
+    }
+
+    private void mode_easy(){
+
+    }
+
+    private void removeButtonAction(){
+        btn.setOnClickListener(null);
     }
 
 }
