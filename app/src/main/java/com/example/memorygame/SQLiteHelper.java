@@ -60,4 +60,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return cursor.moveToFirst();
     }
 
+    public String getUserName(String login, String password){
+        String result = "Unknown";
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = String.format("SELECT * FROM %s WHERE %s = '%s' AND %S = '%s'",
+                TABLE_NAME, LOGIN, login, PASSWORD, password);
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        if(!cursor.isAfterLast()){
+            result = cursor.getString(cursor.getColumnIndex(NAME));
+        }
+        return result;
+    }
+
 }

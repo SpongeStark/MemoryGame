@@ -39,16 +39,19 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void start(View view){
-        key = new int[]{1,lib[0],lib[1],lib[2],lib[1],lib[3]};
-        text.setText("ready");
-        new Handler().postDelayed(() -> {
-            // TO DO
-            for (ImageButton button : buttons) {
-                button.setOnClickListener(this::onClick);
-            }
-            text.setText("start");
-            removeButtonAction();
-        }, 1000);
+//        key = new int[]{1,lib[0],lib[1],lib[2],lib[1],lib[3]};
+//        text.setText("ready");
+//        new Handler().postDelayed(() -> {
+//            // TO DO
+//            for (ImageButton button : buttons) {
+//                button.setOnClickListener(this::onClick);
+//            }
+//            text.setText("start");
+//            removeButtonAction();
+//        }, 1000);
+
+        // test blink
+        blink(buttons[1]);
     }
 
     public void onClick(View view){
@@ -72,12 +75,34 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void mode_easy(){
-
-    }
-
     private void removeButtonAction(){
         btn.setOnClickListener(null);
     }
 
+    private void blink(ImageButton btn){
+        switch (btn.getId()){
+            case R.id.btn1 :
+                btn.setBackground(getDrawable(R.drawable.btn_red));
+                goBackLater(btn, 500);
+                break;
+            case R.id.btn2 :
+                btn.setBackground(getDrawable(R.drawable.btn_green));
+                goBackLater(btn, 500);
+                break;
+            case R.id.btn3 :
+                btn.setBackground(getDrawable(R.drawable.btn_yellow));
+                goBackLater(btn, 500);
+                break;
+            case R.id.btn4 :
+                btn.setBackground(getDrawable(R.drawable.btn_blue));
+                goBackLater(btn, 500);
+                break;
+        }
+    }
+
+    private void goBackLater(ImageButton btn, int delay){
+        new Handler().postDelayed(() -> {
+            btn.setBackground(getDrawable(R.drawable.btn_gray));
+        }, delay);
+    }
 }

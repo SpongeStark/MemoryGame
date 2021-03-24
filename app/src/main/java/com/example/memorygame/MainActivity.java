@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(myHelper.connect(login, pwd)){
             Intent intent = new Intent(this, HomePage.class);
+            intent.putExtra("username", myHelper.getUserName(login, pwd));
             password.setText("");
             startActivity(intent);
         }else{
