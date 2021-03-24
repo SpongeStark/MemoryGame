@@ -23,10 +23,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sqlRequest = "CREATE table user(" +
                 "id integer primary key autoincrement, " +
-                "name varchar(100), " +
-                "email varchar(100), " +
-                "password varchar(100), " +
-                "birthday datetime, " +
+                "name text, " +
                 "sex int)";
         db.execSQL(sqlRequest);
     }
@@ -36,11 +33,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         System.out.println("The version is updated from "+oldVersion+" to "+newVersion+".");
     }
 
-    boolean addUser(String name, String email, String password, int sex){
+    boolean addUser(String name, int sex){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues data = new ContentValues();
         data.put("name",name);
-        data.put("email",email);
+        data.put("sex",sex);
         // ...
 
         return false;

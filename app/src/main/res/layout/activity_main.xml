@@ -55,7 +55,8 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             tools:layout_editor_absoluteX="99dp"
-            tools:layout_editor_absoluteY="151dp" />
+            tools:layout_editor_absoluteY="151dp"
+            android:autofillHints="" />
 
         <Space
             android:layout_width="match_parent"
@@ -78,7 +79,8 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             tools:layout_editor_absoluteX="104dp"
-            tools:layout_editor_absoluteY="302dp" />
+            tools:layout_editor_absoluteY="302dp"
+            android:autofillHints="" />
 
 
     </LinearLayout>

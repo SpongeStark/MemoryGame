@@ -5,13 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import java.util.Date;
-
 public class SQLiteHelper extends SQLiteOpenHelper {
-    public static String DB_NAME="GamerDB", TABLE_NAME="Gamer", ID="id";
+    public static String DB_NAME="Gamer.db", TABLE_NAME="Gamer", ID="id";
     public static String NAME="name", LOGIN="email", PASSWORD="password";
     public static String BIRTHDAY="birthday", SEX="sex", SCORE="score";
 
@@ -23,11 +22,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + TABLE_NAME + " (" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                NAME + " TEXT," +
                 LOGIN + " TEXT," +
                 PASSWORD + " TEXT, " +
-                BIRTHDAY + " DATE, " +
+                BIRTHDAY + " TEXT, " +
                 SEX + " INTEGER, " +
-                SCORE + "INTEGER);";
+                SCORE + " INTEGER)";
         db.execSQL(sql);
     }
 
@@ -45,7 +45,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         data.put(LOGIN, email);
         data.put(PASSWORD, password);
         data.put(BIRTHDAY, birthday);
-        data.put(SEX, sex);
+        data.put(SEX, sex?1:0);
         data.put(SCORE, score);
 
         long result = db.insert(TABLE_NAME, null, data);
@@ -54,9 +54,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     boolean connect(String login, String password){
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = String.format("SELECT * FROM %s WHERE %s = %S AND %S = %S;",
+        String sql = String.format("SELECT * FROM %s WHERE %s = '%s' AND %S = '%s'",
                                 TABLE_NAME, LOGIN, login, PASSWORD, password);
         Cursor cursor = db.rawQuery(sql, null);
         return cursor.moveToFirst();
     }
+
 }
