@@ -3,8 +3,8 @@ package com.example.memorygame;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,9 +24,8 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
     int[] lib;
     private Handler myHandler;
     private Thread myThread;
-
-
-
+    String mode;
+    int currentNumBlocs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +34,11 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_game);
 
-        myHandler = new Handler(this);
+        Intent intent = getIntent();
+        mode = intent.getStringExtra("mode");
 
+        myHandler = new Handler(this);
+        currentNumBlocs = minNumBloc();
 
         buttons = new ImageButton[4];
         lib = new int[]{R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4};
@@ -52,30 +54,47 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     public void start(View view){
+        currentNumBlocs = minNumBloc();
         myThread = new Thread(this);
         myThread.start();
     }
 
+    public void goOn(View view){
+        if(maxNumBloc() > currentNumBlocs){
+            currentNumBlocs++;
+            myThread = new Thread(this);
+            myThread.start();
+        }
+    }
+
     @Override
     public void run() {
-        setRandomArray(5);
+        // change the button to "restart"
+        myHandler.sendMessage(getMessageOfIndex(7));
+        btn.setOnClickListener(this::start);
+
+        // start the game
+        setRandomArray(currentNumBlocs);
+        // ready
         myHandler.sendMessage(getMessageOfIndex(1));
-        try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+        try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+        // start
         myHandler.sendMessage(getMessageOfIndex(2));
-        // 全部闪一遍
+        try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+        // 全部闪一遍 | the buttons blink
         for(int i=1; i<answer.length; i++){
             myHandler.sendMessage(getMessageOfIndex(3,i));
             try { Thread.sleep(500); } catch (InterruptedException ignored) {}
             myHandler.sendMessage(getMessageOfIndex(4,i));
             try { Thread.sleep(200); } catch (InterruptedException ignored) {}
         }
+        // set click listener of 4 buttons
         for (ImageButton button : buttons) {
-            button.setOnClickListener((view) ->{onClick(view);});
+            button.setOnClickListener(this::onClick);
         }
+        // show "Your turn"
         myHandler.sendMessage(getMessageOfIndex(5));
     }
-
-
 
     private Message getMessageOfIndex(int index){
         Message msg = new Message();
@@ -89,6 +108,10 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         return msg;
     }
 
+    /**
+     * 所有改变UI的操作
+     * All the actions of UI changes
+     */
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         switch (msg.what) {
@@ -107,34 +130,56 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
             case 5:
                 text.setText("Your turn");
                 break;
-
+            case 6:
+                text.setText("Correct\nClick to continue");
+                btn.setText("Continue");
+                break;
+            case 7:
+                text.setText("Fail");
+                btn.setText("Restart");
+                break;
         }
         return true;
     }
 
+    /**
+     * 那个普通按钮的事件函数
+     * The action of the normal button
+     * @param view
+     */
     public void onClick(View view){
         int btnID = view.getId();
         if(btnID == answer[answer[0]]){
             if(answer[0] == answer.length-1){
-                text.setText("Win");
+                successAction();
                 removeAllAction();
             }else{
                 answer[0]++;
             }
         }else{
-            text.setText("Fail");
+            failAction();
             removeAllAction();
         }
     }
 
+    /**
+     * 移除4个ImageButton的事件函数
+     * remove all the action listener of the 4 buttons
+     */
     private void removeAllAction(){
         for (ImageButton button : buttons) {
             button.setOnClickListener(null);
         }
     }
 
-    private void removeButtonAction(){
-        btn.setOnClickListener(null);
+    private void successAction(){
+        myHandler.sendMessage(getMessageOfIndex(6));
+        btn.setOnClickListener(this::goOn);
+    }
+
+    private void failAction(){
+        myHandler.sendMessage(getMessageOfIndex(7));
+        btn.setOnClickListener(this::start);
     }
 
     /**
@@ -143,10 +188,10 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
      * @param length 随机数组长度
      */
     private void setRandomArray(int length){
-        answer = new int[length];
+        answer = new int[++length];
         answer[0] = 1;
         Random r = new Random();
-        for (int i=1; i<length; i++){
+        for (int i = 1; i < length; i++){
             int index = r.nextInt(4);
             answer[i] = lib[index];
         }
@@ -183,6 +228,32 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
             case R.id.btn4:
                 btn.setBackground(getDrawable(R.drawable.btn_bg_blue));
                 break;
+        }
+    }
+
+    private int minNumBloc(){
+        switch (mode){
+            case "EASY":
+                return 1;
+            case "DIFFICULT":
+                return 3;
+            case "EXPERT":
+                return 5;
+            default:
+                return 0;
+        }
+    }
+
+    private int maxNumBloc(){
+        switch (mode){
+            case "EASY":
+                return 10;
+            case "DIFFICULT":
+                return 15;
+            case "EXPERT":
+                return 20;
+            default:
+                return 0;
         }
     }
 

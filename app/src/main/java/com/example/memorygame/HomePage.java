@@ -25,6 +25,7 @@ public class HomePage extends AppCompatActivity {
 
     public void easy_mode(View view) {
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("mode", "EASY");
         startActivity(intent);
     }
 }

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public void btn_register_click(View view) {
 //        Intent intent = new Intent(this, RegisterActivity.class);
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("mode", "EASY");
         startActivity(intent);
     }
 
