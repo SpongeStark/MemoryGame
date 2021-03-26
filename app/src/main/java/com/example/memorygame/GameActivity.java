@@ -1,11 +1,13 @@
 package com.example.memorygame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,13 +15,18 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements Handler.Callback, Runnable{
 
     ImageButton[] buttons;
     Button btn;
     TextView text;
     int[] answer;
     int[] lib;
+    private Handler myHandler;
+    private Thread myThread;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,9 @@ public class GameActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_game);
+
+        myHandler = new Handler(this);
+
 
         buttons = new ImageButton[4];
         lib = new int[]{R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4};
@@ -42,7 +52,64 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void start(View view){
-        loop();
+        myThread = new Thread(this);
+        myThread.start();
+    }
+
+    @Override
+    public void run() {
+        setRandomArray(5);
+        myHandler.sendMessage(getMessageOfIndex(1));
+        try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+        myHandler.sendMessage(getMessageOfIndex(2));
+        // 全部闪一遍
+        for(int i=1; i<answer.length; i++){
+            myHandler.sendMessage(getMessageOfIndex(3,i));
+            try { Thread.sleep(500); } catch (InterruptedException ignored) {}
+            myHandler.sendMessage(getMessageOfIndex(4,i));
+            try { Thread.sleep(200); } catch (InterruptedException ignored) {}
+        }
+        for (ImageButton button : buttons) {
+            button.setOnClickListener((view) ->{onClick(view);});
+        }
+        myHandler.sendMessage(getMessageOfIndex(5));
+    }
+
+
+
+    private Message getMessageOfIndex(int index){
+        Message msg = new Message();
+        msg.what = index;
+        return msg;
+    }
+
+    private Message getMessageOfIndex(int index, int arg1){
+        Message msg = getMessageOfIndex(index);
+        msg.arg1 = arg1;
+        return msg;
+    }
+
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        switch (msg.what) {
+            case 1:
+                text.setText("ready");
+                break;
+            case 2:
+                text.setText("Start");
+                break;
+            case 3:
+                toBlink(findViewById(answer[msg.arg1]));
+                break;
+            case 4:
+                toNormal(findViewById(answer[msg.arg1]));
+                break;
+            case 5:
+                text.setText("Your turn");
+                break;
+
+        }
+        return true;
     }
 
     public void onClick(View view){
@@ -58,13 +125,6 @@ public class GameActivity extends AppCompatActivity {
             text.setText("Fail");
             removeAllAction();
         }
-    }
-
-    private void loop(){
-        setRandomArray(5);
-        blink(1);
-//        play();
-
     }
 
     private void removeAllAction(){
@@ -92,56 +152,39 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void blink(int startIndex){
-        if(startIndex < answer.length){
-            blinkOnce((ImageButton)findViewById(answer[startIndex]));
-            new Handler().postDelayed(() -> {
-                blink(startIndex+1);
-            }, 700);
-        }
-//        for(int i=1; i<answer.length; i++){
-//            blinkOnce((ImageButton)findViewById(answer[i]));
-//        }
-    }
-
-    private void blinkOnce(ImageButton btn){
+    private void toBlink(ImageButton btn){
         switch (btn.getId()){
             case R.id.btn1 :
-//                btn.setBackground(getDrawable(R.drawable.btn_red));
-                blinkForOneButton(btn, 500, R.drawable.btn_red, R.drawable.btn_bg_red);
+                btn.setBackground(getDrawable(R.drawable.btn_red));
                 break;
             case R.id.btn2 :
-//                btn.setBackground(getDrawable(R.drawable.btn_green));
-                blinkForOneButton(btn, 500, R.drawable.btn_green, R.drawable.btn_bg_green);
+                btn.setBackground(getDrawable(R.drawable.btn_green));
                 break;
             case R.id.btn3 :
-//                btn.setBackground(getDrawable(R.drawable.btn_yellow));
-                blinkForOneButton(btn, 500, R.drawable.btn_yellow, R.drawable.btn_bg_yellow);
+                btn.setBackground(getDrawable(R.drawable.btn_yellow));
                 break;
             case R.id.btn4 :
-//                btn.setBackground(getDrawable(R.drawable.btn_blue));
-                blinkForOneButton(btn, 500, R.drawable.btn_blue, R.drawable.btn_bg_blue);
+                btn.setBackground(getDrawable(R.drawable.btn_blue));
                 break;
         }
     }
 
-    private void blinkForOneButton(ImageButton btn, int delay, int id_blinkBG, int id_normalBG){
-        btn.setBackground(getDrawable(id_blinkBG));
-        new Handler().postDelayed(() -> {
-            btn.setBackground(getDrawable(id_normalBG));
-        }, delay);
+    private void toNormal(ImageButton btn) {
+        switch (btn.getId()) {
+            case R.id.btn1:
+                btn.setBackground(getDrawable(R.drawable.btn_bg_red));
+                break;
+            case R.id.btn2:
+                btn.setBackground(getDrawable(R.drawable.btn_bg_green));
+                break;
+            case R.id.btn3:
+                btn.setBackground(getDrawable(R.drawable.btn_bg_yellow));
+                break;
+            case R.id.btn4:
+                btn.setBackground(getDrawable(R.drawable.btn_bg_blue));
+                break;
+        }
     }
 
-    private void play(){
-//        answer = new int[]{1,lib[0],lib[1],lib[2],lib[1],lib[3]};
-        text.setText("ready");
-        new Handler().postDelayed(() -> {
-            // TO DO
-            for (ImageButton button : buttons) {
-                button.setOnClickListener(this::onClick);
-            }
-            text.setText("start");
-            removeButtonAction();
-        }, 500);
-    }
+
 }
