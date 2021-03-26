@@ -20,26 +20,37 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
     ImageButton[] buttons;
     Button btn;
     TextView text;
+    TextView txtLife;
     int[] answer;
     int[] lib;
     private Handler myHandler;
     private Thread myThread;
     String mode;
+    String login;
+    int minNumBloc;
+    int maxNumBloc;
     int currentNumBlocs;
+    int currentLift;
+    int totalLife;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // UI initializations
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_game);
 
+        // initialise all the information of mode
         Intent intent = getIntent();
+        login = intent.getStringExtra("login");
         mode = intent.getStringExtra("mode");
+        modeInit();
 
+        // initialise the Handler
         myHandler = new Handler(this);
-        currentNumBlocs = minNumBloc();
 
+        // All the ImageButton initializations
         buttons = new ImageButton[4];
         lib = new int[]{R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4};
         buttons[0] = findViewById(lib[0]);
@@ -47,20 +58,27 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         buttons[2] = findViewById(lib[2]);
         buttons[3] = findViewById(lib[3]);
 
+        // initialise the TextView
         text = findViewById(R.id.txtInfo);
         text.setText("Click to Start");
+        txtLife = findViewById(R.id.txtLife);
+        txtLife.setText(currentLift+" / "+totalLife);
+
+        // set the action of the normal button
         btn = findViewById(R.id.btn_start);
         btn.setOnClickListener(this::start);
+
+
     }
 
     public void start(View view){
-        currentNumBlocs = minNumBloc();
+        currentNumBlocs = minNumBloc;
         myThread = new Thread(this);
         myThread.start();
     }
 
     public void goOn(View view){
-        if(maxNumBloc() > currentNumBlocs){
+        if(maxNumBloc > currentNumBlocs){
             currentNumBlocs++;
             myThread = new Thread(this);
             myThread.start();
@@ -135,8 +153,15 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
                 btn.setText("Continue");
                 break;
             case 7:
-                text.setText("Fail");
+                text.setText("Fail\nGame Over");
                 btn.setText("Restart");
+                break;
+            case 8:
+                text.setText("Fail\nClick to retry");
+                btn.setText("Retry");
+                break;
+            case 9:
+                txtLife.setText(currentLift+" / "+totalLife);
                 break;
         }
         return true;
@@ -178,8 +203,17 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
     }
 
     private void failAction(){
-        myHandler.sendMessage(getMessageOfIndex(7));
-        btn.setOnClickListener(this::start);
+        currentLift--;
+        if(currentLift<=0){
+            myHandler.sendMessage(getMessageOfIndex(7));
+            myHandler.sendMessage(getMessageOfIndex(9));
+            btn.setOnClickListener(this::start);
+        }else{
+            currentNumBlocs--;
+            myHandler.sendMessage(getMessageOfIndex(8));
+            myHandler.sendMessage(getMessageOfIndex(9));
+            btn.setOnClickListener(this::goOn);
+        }
     }
 
     /**
@@ -231,30 +265,56 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         }
     }
 
-    private int minNumBloc(){
-        switch (mode){
-            case "EASY":
-                return 1;
-            case "DIFFICULT":
-                return 3;
-            case "EXPERT":
-                return 5;
-            default:
-                return 0;
-        }
-    }
+//    private int minNumBloc(){
+//        switch (mode){
+//            case "EASY":
+//                return 1;
+//            case "DIFFICULT":
+//                return 3;
+//            case "EXPERT":
+//                return 5;
+//            default:
+//                return 0;
+//        }
+//    }
+//
+//    private int maxNumBloc(){
+//        switch (mode){
+//            case "EASY":
+//                return 10;
+//            case "DIFFICULT":
+//                return 15;
+//            case "EXPERT":
+//                return 20;
+//            default:
+//                return 0;
+//        }
+//    }
 
-    private int maxNumBloc(){
+    private void modeInit(){
         switch (mode){
             case "EASY":
-                return 10;
+                minNumBloc = 1;
+                maxNumBloc = 10;
+                totalLife = 2;
+                break;
             case "DIFFICULT":
-                return 15;
+                minNumBloc = 3;
+                maxNumBloc = 10;
+                totalLife = 2;
+                break;
             case "EXPERT":
-                return 20;
+                minNumBloc = 5;
+                maxNumBloc = 10;
+                totalLife = 3;
+                break;
             default:
-                return 0;
+                minNumBloc = 1;
+                maxNumBloc = 10;
+                totalLife = 3;
         }
+        currentNumBlocs = minNumBloc;
+        currentLift = totalLife;
     }
 
 

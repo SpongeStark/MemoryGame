@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class HomePage extends AppCompatActivity {
 
     TextView txtViewHello;
+    String login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,12 +20,14 @@ public class HomePage extends AppCompatActivity {
 
         txtViewHello = findViewById(R.id.welcomeText);
         Intent intent = getIntent();
+        login = intent.getStringExtra("login");
         String userName = intent.getStringExtra("username");
         txtViewHello.setText("Hello "+userName);
     }
 
     public void easy_mode(View view) {
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("login", login);
         intent.putExtra("mode", "EASY");
         startActivity(intent);
     }

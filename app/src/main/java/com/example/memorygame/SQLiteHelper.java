@@ -73,4 +73,25 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public int getScore(String login){
+        int result = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = String.format("SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_NAME, LOGIN, login);
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        if(!cursor.isAfterLast()){
+            result = cursor.getInt(cursor.getColumnIndex(SCORE));
+        }
+        return result;
+    }
+
+    public void addScore(String login, int increment){
+        int newScore = getScore(login) + increment;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = String.format("UPDATE %s SET %s=%d WHERE %s='%s'",
+                TABLE_NAME, SCORE, newScore, LOGIN, login);
+        db.execSQL(sql);
+    }
+
 }

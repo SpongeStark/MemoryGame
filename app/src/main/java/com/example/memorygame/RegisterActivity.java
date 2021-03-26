@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
             myHelper.addGamer(str_username, str_email, str_password, str_birthday, isMale, 0)){
             Toast.makeText(this,"Success",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, HomePage.class);
+            intent.putExtra("login", str_email);
             intent.putExtra("username", str_username);
             startActivity(intent);
         } else {
