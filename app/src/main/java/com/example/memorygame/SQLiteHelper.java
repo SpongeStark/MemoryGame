@@ -39,7 +39,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     }
 
     boolean addGamer(String name, String email, String password, String birthday, boolean sex, int score){
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = String.format("SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_NAME, LOGIN, email);
+        Cursor cursor = db.rawQuery(sql, null);
+        if(cursor.moveToFirst()){
+            return false;
+        }
+        db = this.getWritableDatabase();
         ContentValues data = new ContentValues();
         data.put(NAME, name);
         data.put(LOGIN, email);
@@ -60,11 +67,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return cursor.moveToFirst();
     }
 
-    public String getUserName(String login, String password){
+    public String getUserName(String login){
         String result = "Unknown";
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = String.format("SELECT * FROM %s WHERE %s = '%s' AND %S = '%s'",
-                TABLE_NAME, LOGIN, login, PASSWORD, password);
+        String sql = String.format("SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_NAME, LOGIN, login );
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
         if(!cursor.isAfterLast()){
@@ -86,11 +93,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public void addScore(String login, int increment){
-        int newScore = getScore(login) + increment;
+    public void setScore(String login, int newScore){
+        if(getScore(login) < newScore){
+            SQLiteDatabase db = this.getWritableDatabase();
+            String sql = String.format("UPDATE %s SET %s=%d WHERE %s='%s'",
+                    TABLE_NAME, SCORE, newScore, LOGIN, login);
+            db.execSQL(sql);
+        }
+    }
+
+    // for test
+    public void initScore(String login){
         SQLiteDatabase db = this.getWritableDatabase();
         String sql = String.format("UPDATE %s SET %s=%d WHERE %s='%s'",
-                TABLE_NAME, SCORE, newScore, LOGIN, login);
+                TABLE_NAME, SCORE, 0, LOGIN, login);
         db.execSQL(sql);
     }
 

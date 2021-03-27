@@ -28,10 +28,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btn_register_click(View view) {
-//        Intent intent = new Intent(this, RegisterActivity.class);
-        Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("mode", "EASY");
-        intent.putExtra("login", "t");
+        Intent intent = new Intent(this, RegisterActivity.class);
+//        Intent intent = new Intent(this, HomePage.class);
+//        intent.putExtra("login", "t");
         startActivity(intent);
     }
 
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(myHelper.connect(login, pwd)){
             Intent intent = new Intent(this, HomePage.class);
-            intent.putExtra("username", myHelper.getUserName(login, pwd));
             intent.putExtra("login", login);
             password.setText("");
             startActivity(intent);

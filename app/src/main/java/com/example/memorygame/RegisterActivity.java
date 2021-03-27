@@ -62,7 +62,13 @@ public class RegisterActivity extends AppCompatActivity {
             intent.putExtra("username", str_username);
             startActivity(intent);
         } else {
-            Toast.makeText(this,"Please complete the information",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void btn_register_cancel(View view){
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
+        onBackPressed();
     }
 }
