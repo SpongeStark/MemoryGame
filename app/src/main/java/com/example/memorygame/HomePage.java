@@ -1,21 +1,25 @@
 package com.example.memorygame;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomePage extends AppCompatActivity {
+public class HomePage extends AppCompatActivity implements Runnable {
 
     TextView txtViewHello;
     TextView txtViewScore;
     String login;
     SQLiteHelper myHelper;
+    Handler myHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class HomePage extends AppCompatActivity {
         txtViewHello = findViewById(R.id.welcomeText);
         txtViewScore = findViewById(R.id.scoreText);
         myHelper = new SQLiteHelper(this);
+        myHandler = new Handler();
 
         Intent intent = getIntent();
         login = intent.getStringExtra("login");
@@ -33,6 +38,8 @@ public class HomePage extends AppCompatActivity {
         txtViewHello.setText("Hello "+userName);
         int score = myHelper.getScore(login);
         txtViewScore.setText("Score : "+ (score/2.0) );
+
+        myHandler.post(this::run);
     }
 
     public void epic_mode(View view) {
@@ -63,5 +70,12 @@ public class HomePage extends AppCompatActivity {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public void run() {
+        int score = myHelper.getScore(login);
+        txtViewScore.setText("Score : "+ (score/2.0) );
+        myHandler.postDelayed(this::run, 1000);
     }
 }

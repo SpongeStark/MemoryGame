@@ -89,7 +89,7 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         switch (mode){
             case "EASY":
                 minNumBloc = 1;
-                maxNumBloc = 5; // just to test
+                maxNumBloc = 10;
                 totalLife = 2;
                 weight_2x = 2;
                 break;
@@ -119,9 +119,10 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
 
     @Override
     public void run() {
+        // remove the event function
+        btn.setOnClickListener(null);
         // change the button to "restart"
         myHandler.sendMessage(getMessageOfIndex(7));
-        btn.setOnClickListener(this::start);
 
         // start the game
         setRandomArray(currentNumBlocs);
@@ -144,6 +145,8 @@ public class GameActivity extends AppCompatActivity implements Handler.Callback,
         }
         // show "Your turn"
         myHandler.sendMessage(getMessageOfIndex(5));
+        // recover the event function
+        btn.setOnClickListener(this::start);
     }
 
     //region 有关handleMessage | all about handle message
